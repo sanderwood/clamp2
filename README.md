@@ -68,6 +68,7 @@ conda activate clamp2
     ]
   }
   ```
+   The filepaths field contains relative paths starting from the shortest common root directory (e.g., abc/ or mtf/). This ensures that only the minimal shared part of the path is included, and each file is represented with a concise relative path from this root.
 
    **Output Example**: The output will be a JSON file containing the structured summary in both English and a selected non-English language. Here’s an example of the expected output:
 
@@ -91,6 +92,19 @@ conda activate clamp2
     "mtf/American_Music/Folk_Traditions/19th_Century/Stephen_Foster/Hard_Times_Come_Again_No_More.mtf"
   ]
 }
+```
+
+After generating the individual JSON files:
+
+1. Merge all JSON files into a single JSONL file.
+ 
+2. Place the merged JSONL file and the shortest common root directories (e.g., abc/ and/or mtf/) in the same folder, structured like this:
+
+```
+/your-target-folder/
+├── abc/
+├── mtf/
+├── merged_output.jsonl
 ```
 
 ### Training and Feature Extraction
