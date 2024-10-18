@@ -7,7 +7,7 @@ CLaMP 2 is a music information retrieval model compatible with 101 languages, de
 
 ### Links
 - [CLaMP 2 Code](https://github.com/sanderwood/clamp2)
-- [CLaMP 2 Paper](https://arxiv.org/)
+- [CLaMP 2 Paper](https://arxiv.org/pdf/2410.13267)
 - [CLaMP 2 Model Weights](https://huggingface.co/sander-wood/clamp2/blob/main/weights_clamp2_h_size_768_lr_5e-05_batch_128_scale_1_t_length_128_t_model_FacebookAI_xlm-roberta-base_t_dropout_True_m3_True.pth)
 - [M3 Model Weights](https://huggingface.co/sander-wood/clamp2/blob/main/weights_m3_p_size_64_p_length_512_t_layers_3_p_layers_12_h_size_768_lr_0.0001_batch_16_mask_0.45.pth)
 
@@ -127,12 +127,12 @@ Benchmark datasets related to the experiments conducted with CLaMP 2 and M3, inc
 If you use CLaMP 2 or M3 in your research, please cite the following paper:
 
 ```bibtex
-@inproceedings{clamp2,
-  title={CLaMP 2: Multimodal Music Information Retrieval Across 101 Languages Using Large Language Models},
-  author={Author Name and Coauthor Name},
-  booktitle={Proceedings of the Conference on Music Information Retrieval},
-  year={2024},
-  publisher={Publisher Name},
-  address={Conference Location},
-  url={https://placeholder.url}
+@misc{wu2024clamp2multimodalmusic,
+      title={CLaMP 2: Multimodal Music Information Retrieval Across 101 Languages Using Large Language Models}, 
+      author={Shangda Wu and Yashan Wang and Ruibin Yuan and Zhancheng Guo and Xu Tan and Ge Zhang and Monan Zhou and Jing Chen and Xuefeng Mu and Yuejie Gao and Yuanliang Dong and Jiafeng Liu and Xiaobing Li and Feng Yu and Maosong Sun},
+      year={2024},
+      eprint={2410.13267},
+      archivePrefix={arXiv},
+      primaryClass={cs.SD},
+      url={https://arxiv.org/abs/2410.13267}, 
 }
