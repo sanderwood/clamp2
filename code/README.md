@@ -39,7 +39,7 @@ CLaMP 2 utilizes the multilingual text encoder `FacebookAI/xlm-roberta-base` for
 To start the training process, use the following command:
 
 ```bash
-torch.distributed.launch --nproc_per_node=<number_of_GPUs> --use_env train_clamp2.py
+python -m torch.distributed.launch --nproc_per_node=<number_of_GPUs> --use_env train_clamp2.py
 ```
 
 Replace `<number_of_GPUs>` with the number of GPUs you want to use for training.
@@ -78,7 +78,7 @@ This script is dedicated to training the M3 model using interleaved ABC and MTF 
 To start the training process for the M3 model, use the following command:
 
 ```bash
-torch.distributed.launch --nproc_per_node=<number_of_GPUs> --use_env train_m3.py
+python -m torch.distributed.launch --nproc_per_node=<number_of_GPUs> --use_env train_m3.py
 ```
 
 Replace `<number_of_GPUs>` with the number of GPUs you want to use for training.
