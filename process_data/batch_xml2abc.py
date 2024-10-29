@@ -7,13 +7,13 @@ import subprocess
 from tqdm import tqdm
 from multiprocessing import Pool
 
+
 def convert_xml2abc(file_list):
-    cmd = 'cmd /u /c python utils/xml2abc.py -d 8 -x '
+    cmd = 'python utils/xml2abc.py -d 8 -x '
     for file in tqdm(file_list):
-        filename = file.split('/')[-1]
-        output_dir = file.split('/')[:-1]
-        output_dir[0] = output_dir[0] + '_abc'
-        output_dir = '/'.join(output_dir)
+        filename = os.path.basename(file)
+        output_dir = os.path.dirname(file)
+        output_dir = os.path.join(output_dir + '_abc')  # Add '_abc' to the output directory
         os.makedirs(output_dir, exist_ok=True)
 
         try:
@@ -26,32 +26,30 @@ def convert_xml2abc(file_list):
                     f.write(file + '\n')
                 continue
             else:
-                with open(output_dir + '/' + ".".join(filename.split(".")[:-1]) + '.abc', 'w', encoding='utf-8') as f:
+                with open(os.path.join(output_dir, filename.rsplit('.', 1)[0] + '.abc'), 'w', encoding='utf-8') as f:
                     f.write(output)
         except Exception as e:
             with open("logs/xml2abc_error_log.txt", "a", encoding="utf-8") as f:
                 f.write(file + ' ' + str(e) + '\n')
-            pass
+
 
 if __name__ == '__main__':
     file_list = []
     os.makedirs("logs", exist_ok=True)
 
     # Traverse the specified folder for XML/MXL files
-    for root, dirs, files in os.walk(input_dir):
+    for root, dirs, files in os.walk(os.path.abspath(input_dir)):
         for file in files:
-            if not file.endswith((".mxl", ".xml", ".musicxml")):
-                continue
-            filename = os.path.join(root, file).replace("\\", "/")
-            file_list.append(filename)
+            if file.endswith((".mxl", ".xml", ".musicxml")):
+                filename = os.path.join(root, file).replace("\\", "/")
+                file_list.append(filename)
 
-    # Prepare for multiprocessing
-    file_lists = []
+    # Shuffle and prepare for multiprocessing
     random.shuffle(file_list)
-    for i in range(os.cpu_count()):
-        start_idx = int(math.floor(i * len(file_list) / os.cpu_count()))
-        end_idx = int(math.floor((i + 1) * len(file_list) / os.cpu_count()))
-        file_lists.append(file_list[start_idx:end_idx])
+    num_files = len(file_list)
+    num_processes = os.cpu_count()
+    file_lists = [file_list[i::num_processes] for i in range(num_processes)]
 
-    pool = Pool(processes=os.cpu_count())
-    pool.map(convert_xml2abc, file_lists)
+    # Create a pool for processing
+    with Pool(processes=num_processes) as pool:
+        pool.map(convert_xml2abc, file_lists)
