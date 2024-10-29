@@ -1,0 +1,15 @@
+# torch>=2.5.0
+# torchvision 
+# torchaudio 
+horovod # remove this on ARM-based macs..
+abctoolkit
+accelerate
+mido
+numpy<=2.0.0
+openai>=1.52.2
+samplings==0.1.7
+scikit_learn
+tqdm
+transformers>=4.46.0
+Unidecode
+wandb
