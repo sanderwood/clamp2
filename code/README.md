@@ -13,8 +13,9 @@ This script contains the training hyperparameters and file paths used in the `tr
 This script utilizes the pre-trained CLaMP 2 model to extract representations of text (.txt) or music (.abc or .mtf) from a specified input folder and save the features to a target output folder in `.npy` format. The extracted features can be normalized for semantic search or retain temporal information for classification tasks.
 
 **Usage:**
+It supports multi-GPU processing with `accelerate launch` for efficient extraction across multiple GPUs.
 ```bash
-python extract_clamp2.py <input_dir> <output_dir> [--normalize]
+accelerate launch extract_clamp2.py <input_dir> <output_dir> [--normalize]
 ```
 - `input_dir`: Directory containing input data files.
 - `output_dir`: Directory to save the output features.
@@ -24,8 +25,9 @@ python extract_clamp2.py <input_dir> <output_dir> [--normalize]
 This script employs the pre-trained M3 model to extract representations in interleaved ABC notation and MIDI Text Format (MTF) from the specified input folder, saving the features to the target folder as `.npy` files.
 
 **Usage:**
+It supports multi-GPU processing with `accelerate launch` for efficient extraction across multiple GPUs.
 ```bash
-python extract_m3.py <input_dir> <output_dir>
+accelerate launch extract_m3.py <input_dir> <output_dir>
 ```
 - `input_dir`: Directory with input files (in .abc or .mtf format).
 - `output_dir`: Directory to save extracted features.
