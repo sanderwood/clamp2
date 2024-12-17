@@ -24,10 +24,8 @@ def abc_pipeline(abc_path, input_dir, output_dir):
         abc_lines = f.readlines()
 
     abc_lines = [line for line in abc_lines if line.strip() != '']
-    abc_lines = remove_information_field(
-        abc_lines=abc_lines, 
-        info_fields=['X:', 'T:', 'C:', 'W:', 'w:', 'Z:', '%%MIDI']
-    )
+    abc_lines = remove_information_field(abc_lines=abc_lines,
+                                         info_fields=['X:', 'T:', 'C:', 'W:', 'w:', 'Z:', '%%MIDI'])
     abc_lines = remove_bar_no_annotations(abc_lines)
 
     # Remove escaped quotes and clean up barlines inside quotes
@@ -50,7 +48,7 @@ def abc_pipeline(abc_path, input_dir, output_dir):
     if stripped_abc_lines is None:
         print(abc_path, 'Failed to strip')
         return
-    
+
     # Check alignment
     _, bar_no_equal_flag, bar_dur_equal_flag = check_alignment_unrotated(stripped_abc_lines)
     if not bar_no_equal_flag:
@@ -60,7 +58,7 @@ def abc_pipeline(abc_path, input_dir, output_dir):
 
     # Construct the output path, maintaining input folder structure
     relative_path = os.path.relpath(abc_path, input_dir)  # Get relative path from input dir
-    output_file_path = os.path.join(output_dir, relative_path)  # Recreate output path
+    output_file_path = os.path.join(output_dir, os.path.normpath(relative_path))  # Recreate output path
     os.makedirs(os.path.dirname(output_file_path), exist_ok=True)  # Ensure output folder exists
 
     try:
@@ -76,6 +74,7 @@ def abc_pipeline(abc_path, input_dir, output_dir):
     with open(output_file_path, 'w', encoding='utf-8') as w:
         w.writelines(rotated_abc_lines)
 
+
 def abc_pipeline_list(abc_path_list, input_dir, output_dir):
     for abc_path in tqdm(abc_path_list):
         try:
@@ -84,34 +83,25 @@ def abc_pipeline_list(abc_path_list, input_dir, output_dir):
             print(abc_path, e)
             pass
 
+
 def batch_abc_pipeline(input_dir):
     """
     Batch process all ABC files from `input_dir`, converting them to interleaved notation.
     """
     output_dir = input_dir + "_interleaved"
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir, exist_ok=True)
+    os.makedirs(output_dir, exist_ok=True)
 
-    abc_path_list = []
-    for abc_path in find_all_abc(input_dir):
-        if os.path.getsize(abc_path) > 0:
-            abc_path_list.append(abc_path)
+    abc_path_list = [abc_path for abc_path in find_all_abc(input_dir) if os.path.getsize(abc_path) > 0]
     random.shuffle(abc_path_list)
     print(f"Found {len(abc_path_list)} ABC files.")
 
     num_cpus = os.cpu_count()
-    split_lists = [[] for _ in range(num_cpus)]
-    index = 0
+    split_lists = [abc_path_list[i::num_cpus] for i in range(num_cpus)]
 
-    for abc_path in abc_path_list:
-        split_lists[index].append(abc_path)
-        index = (index + 1) % num_cpus
+    with Pool(processes=num_cpus) as pool:
+        pool.starmap(abc_pipeline_list, [(split, input_dir, output_dir) for split in split_lists])
 
-    pool = Pool(processes=num_cpus)
-    pool.starmap(
-        abc_pipeline_list, 
-        [(split, input_dir, output_dir) for split in split_lists]
-    )
 
 if __name__ == '__main__':
     batch_abc_pipeline(input_dir)
+
