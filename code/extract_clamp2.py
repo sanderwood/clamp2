@@ -48,7 +48,7 @@ with open("logs/files_shuffle_extract_clamp2.json", "w", encoding="utf-8") as f:
 accelerator = Accelerator()
 device = accelerator.device
 print("Using device:", device)
-with open("logs/log_extract_clamp.txt", "a", encoding="utf-8") as f:
+with open("logs/log_extract_clamp2.txt", "a", encoding="utf-8") as f:
     f.write("Using device: " + str(device) + "\n")
 
 m3_config = BertConfig(vocab_size=1,
@@ -139,7 +139,7 @@ def extract_feature(filename, get_normalized=normalize):
 
 def process_directory(input_dir, output_dir, files):
     print(f"Found {len(files)} files in total")
-    with open("logs/log_extract_clamp.txt", "a", encoding="utf-8") as f:
+    with open("logs/log_extract_clamp2.txt", "a", encoding="utf-8") as f:
         f.write("Found " + str(len(files)) + " files in total\n")
 
     # calculate the number of files to process per GPU
@@ -160,7 +160,7 @@ def process_directory(input_dir, output_dir, files):
             os.makedirs(output_subdir, exist_ok=True)
         except Exception as e:
             print(output_subdir + " can not be created\n" + str(e))
-            with open("logs/log_extract_clamp.txt", "a") as f:
+            with open("logs/log_extract_clamp2.txt", "a") as f:
                 f.write(output_subdir + " can not be created\n" + str(e) + "\n")
 
         output_file = os.path.join(output_subdir, os.path.splitext(os.path.basename(file))[0] + ".npy")
@@ -179,7 +179,7 @@ def process_directory(input_dir, output_dir, files):
                 f.write(file + "\n")
         except Exception as e:
             print(f"Failed to process {file}: {e}")
-            with open("logs/log_extract_clamp.txt", "a", encoding="utf-8") as f:
+            with open("logs/log_extract_clamp2.txt", "a", encoding="utf-8") as f:
                 f.write("Failed to process " + file + ": " + str(e) + "\n")
 
 with open("logs/files_shuffle_extract_clamp2.json", "r", encoding="utf-8") as f:
@@ -188,5 +188,5 @@ with open("logs/files_shuffle_extract_clamp2.json", "r", encoding="utf-8") as f:
 # process the files
 process_directory(input_dir, output_dir, files)
 
-with open("logs/log_extract_clamp.txt", "a", encoding="utf-8") as f:
+with open("logs/log_extract_clamp2.txt", "a", encoding="utf-8") as f:
     f.write("GPU ID: " + str(device) + "\n")
