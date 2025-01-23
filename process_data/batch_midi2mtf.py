@@ -14,6 +14,7 @@ def msg_to_str(msg):
         str_msg += " " + str(value)
     return str_msg.strip().encode('unicode_escape').decode('utf-8')
 
+
 def load_midi(filename):
     # Load a MIDI file
     mid = mido.MidiFile(filename)
@@ -23,38 +24,43 @@ def load_midi(filename):
     for msg in mid.merged_track:
         if m3_compatible:
             if msg.is_meta:
-                if msg.type in ["text", "copyright", "track_name", "instrument_name", 
-                                "lyrics", "marker", "cue_marker", "device_name", "sequencer_specific"]:
+                if msg.type in [
+                        "text", "copyright", "track_name", "instrument_name", "lyrics", "marker", "cue_marker",
+                        "device_name", "sequencer_specific"
+                ]:
                     continue
             else:
                 if msg.type in ["sysex"]:
                     continue
         str_msg = msg_to_str(msg)
         msg_list.append(str_msg)
-    
+
     return "\n".join(msg_list)
+
 
 def convert_midi2mtf(file_list):
     for file in tqdm(file_list):
-        filename = file.split('/')[-1]
-        output_dir = file.split('/')[:-1]
-        output_dir[0] = output_dir[0] + '_mtf'
-        output_dir = '/'.join(output_dir)
+        filename = os.path.basename(file)
+        output_dir = os.path.join(os.path.dirname(file) + '_mtf')
         os.makedirs(output_dir, exist_ok=True)
+
         try:
             output = load_midi(file)
-
+            log_path = os.path.join("logs", "midi2mtf_error_log.txt")
             if output == '':
-                with open('logs/midi2mtf_error_log.txt', 'a', encoding='utf-8') as f:
+                with open(log_path, 'a', encoding='utf-8') as f:
                     f.write(file + '\n')
                 continue
             else:
-                with open(output_dir + "/" + ".".join(filename.split(".")[:-1]) + '.mtf', 'w', encoding='utf-8') as f:
+                output_file = os.path.join(output_dir, ".".join(filename.split(".")[:-1]) + '.mtf')
+                with open(output_file, 'w', encoding='utf-8') as f:
                     f.write(output)
         except Exception as e:
-            with open('logs/midi2mtf_error_log.txt', 'a', encoding='utf-8') as f:
+            log_path = os.path.join("logs", "midi2mtf_error_log.txt")
+            with open(log_path, 'a', encoding='utf-8') as f:
                 f.write(file + " " + str(e) + '\n')
             pass
+
 
 if __name__ == '__main__':
     file_list = []
@@ -65,7 +71,7 @@ if __name__ == '__main__':
         for file in files:
             if not file.endswith(".mid") and not file.endswith(".midi"):
                 continue
-            filename = os.path.join(root, file).replace("\\", "/")
+            filename = os.path.join(root, file)
             file_list.append(filename)
 
     # Prepare for multiprocessing
