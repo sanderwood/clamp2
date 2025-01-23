@@ -1,4 +1,4 @@
-# CLaMP 2: Multimodal Music Information Retrieval Across 101 Languages Using Large Language Models [NAACL 2025]
+# CLaMP 2: Multimodal Music Information Retrieval Across 101 Languages Using Large Language Models
 
 ![CLaMP 2 Overview](overview.jpg)
 
