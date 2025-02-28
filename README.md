@@ -1,5 +1,7 @@
 # CLaMP 2: Multimodal Music Information Retrieval Across 101 Languages Using Large Language Models
 
+**CLaMP 3 is out!** This repo is no longer maintained—check it out here: [CLaMP 3](https://github.com/sanderwood/clamp3).
+
 ![CLaMP 2 Overview](overview.jpg)
 
 ## Overview
